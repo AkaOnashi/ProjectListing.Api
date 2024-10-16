@@ -1,4 +1,6 @@
-﻿namespace ProjectListing.Api.Data
+﻿using Microsoft.AspNetCore.OpenApi;
+using Microsoft.AspNetCore.Http.HttpResults;
+namespace ProjectListing.Api.Data
 {
     public class Employee
     {
@@ -9,7 +11,7 @@
         public string Subdivision { get; set; }
         public string Status { get; set; }
 
-        public ICollection<EmployeeProjects> EmployeeProjects { get; set; }
+        public ICollection<EmployeeProject> EmployeeProjects { get; set; }
 
     }
 }

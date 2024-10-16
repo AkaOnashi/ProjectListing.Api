@@ -9,6 +9,6 @@
         public DateTime EndDate { get; set; }
         public string Status { get; set; }
 
-        public ICollection<EmployeeProjects> EmployeeProjects { get; set; }
+        public ICollection<EmployeeProject> EmployeeProjects { get; set; }
     }
 }

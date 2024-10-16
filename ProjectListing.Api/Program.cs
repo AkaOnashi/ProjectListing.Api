@@ -1,4 +1,6 @@
 using Serilog;
+using ProjectListing.Api.Controllers;
+using ProjectListing.Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
