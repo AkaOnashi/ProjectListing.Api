@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol;
 using ProjectListing.Api.Data;
 
 namespace ProjectListing.Api.Controllers
@@ -7,42 +8,17 @@ namespace ProjectListing.Api.Controllers
     [ApiController]
     public class EmployeesController : ControllerBase
     {
-        private static List<Employee> _employees = new List<Employee>
-        {
-            new Employee { Id = 1, Name = "Ava", Last_Name = "Avro", Position = "Designer", Subdivision = "Design Team", Status = "Active", 
-                    EmployeeProjects = new List<EmployeeProject>
-                    {
-                        new EmployeeProject
-                        {
-                            Id_Project = 1,
-                        }
-                    }
-            },
+        List<Employee> _employees;
 
-            new Employee { Id = 2, Name = "Bava", Last_Name = "Bavro", Position = "Middle .NET Developer", Subdivision = "Dev Team", Status = "Active",
-            EmployeeProjects = new List<EmployeeProject>
-                    {
-                        new EmployeeProject
-                        {
-                            Id_Project = 1,
-                        }
-                    }
-            }
-        };
+        public EmployeesController() 
+        {
+            _employees = DataStore.Employees;
+        }
 
         // GET: api/<EmployeesController>
         [HttpGet]
-        public ActionResult<IEnumerable<string>> GetEmployees()
+        public ActionResult<IEnumerable<Employee>> GetEmployees()
         {
-            var employees = _employees;
-            ;
-
-            foreach(var employee in employees)
-            {
-                employee.EmployeeProjects.FirstOrDefault(ep => ep.Id_Project == 1);
-
-            }
-
             return Ok(_employees);
         }
 

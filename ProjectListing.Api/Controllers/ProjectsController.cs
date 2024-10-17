@@ -7,12 +7,13 @@ namespace ProjectListing.Api.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-        private static List<Project> _projects = new List<Project>
+        List<Project> _projects;
+
+        public ProjectsController()
         {
-            new Project { Id = 1, Name = "Project A", Description = "Description A", StartDate = DateTime.Now, EndDate = DateTime.Now.AddMonths(1), Status = "Active" },
-            new Project { Id = 2, Name = "Project B", Description = "Description B", StartDate = DateTime.Now, EndDate = DateTime.Now.AddMonths(2), Status = "Completed" }
-        };
-        
+            _projects = DataStore.Projects;
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<Project>> GetProjects()
         {
