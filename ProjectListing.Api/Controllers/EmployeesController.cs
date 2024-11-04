@@ -8,11 +8,11 @@ namespace ProjectListing.Api.Controllers
     [ApiController]
     public class EmployeesController : ControllerBase
     {
-        List<Employee> _employees;
+        List<Employee> _employees = new List<Employee>();
 
         public EmployeesController() 
         {
-            _employees = DataStore.Employees;
+            
         }
 
         // GET: api/<EmployeesController>

@@ -7,11 +7,11 @@ namespace ProjectListing.Api.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-        List<Project> _projects;
+        List<Project> _projects = new List<Project>();
 
         public ProjectsController()
         {
-            _projects = DataStore.Projects;
+            
         }
 
         [HttpGet]

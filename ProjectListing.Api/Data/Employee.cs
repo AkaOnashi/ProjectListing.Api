@@ -10,5 +10,7 @@ namespace ProjectListing.Api.Data
         public string Position { get; set; }
         public string Subdivision { get; set; }
         public string Status { get; set; }
+
+        public virtual ICollection<EmployeeProject> EmployeeProjects { get; set; } = new List<EmployeeProject>();
     }
 }
