@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
 using ProjectListing.Api.Data;
+using ProjectListing.Api.Models.Employee;
 
 namespace ProjectListing.Api.Controllers
 {
@@ -9,25 +11,28 @@ namespace ProjectListing.Api.Controllers
     [ApiController]
     public class EmployeesController : ControllerBase
     {
+        private readonly IMapper _mapper;
         private readonly ProjectListingDbContext _context;
 
-        public EmployeesController(ProjectListingDbContext context) 
+        public EmployeesController(ProjectListingDbContext context, IMapper mapper) 
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/<EmployeesController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
+        public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetEmployees()
         {
             var employees = await _context.Employees.ToListAsync();
 
-            return Ok(employees);
+            var records = _mapper.Map<List<EmployeeDto>>(employees);
+            return Ok(records);
         }
 
         // GET api/<EmployeesController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Employee>> GetEmployee(int id)
+        public async Task<ActionResult<EmployeeDetailDto>> GetEmployee(int id)
         {
             var employee = await _context.Employees.FindAsync(id);
 
@@ -36,13 +41,16 @@ namespace ProjectListing.Api.Controllers
                 return NotFound();
             }
 
+            var record = _mapper.Map<EmployeeDetailDto>(employee);
             return Ok(employee);
         }
 
         // POST api/<EmployeesController>
         [HttpPost]
-        public async Task<ActionResult<Employee>> PostEmployee([FromBody] Employee employee)
+        public async Task<ActionResult<Employee>> PostEmployee([FromBody] CreateEmployeeDto createEmployeeDto)
         {
+            var employee = _mapper.Map<Employee>(createEmployeeDto);
+
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
 
@@ -51,17 +59,27 @@ namespace ProjectListing.Api.Controllers
 
         // PUT api/<EmployeesController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<Employee>> PutEmployee(int id, [FromBody] Employee employee)
+        public async Task<ActionResult<Employee>> PutEmployee(int id, [FromBody] UpdateEmployeeDto updateEmployeeDto)
         {
-            if(id != employee.Id)
+            if(id != updateEmployeeDto.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(employee).State = EntityState.Modified;
+            var employee = await _context.Employees.FindAsync(id);
+
+            if(employee == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(updateEmployeeDto, employee);
+
+            //_context.Entry(employee).State = EntityState.Modified;
 
             try
             {
+                _context.Employees.Update(employee);
                 await _context.SaveChangesAsync();
             }
             catch(DbUpdateConcurrencyException)

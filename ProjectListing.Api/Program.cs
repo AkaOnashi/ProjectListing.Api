@@ -2,6 +2,7 @@ using Serilog;
 using ProjectListing.Api.Controllers;
 using ProjectListing.Api.Data;
 using Microsoft.EntityFrameworkCore;
+using ProjectListing.Api.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,8 @@ builder.Services.AddCors(options => {
         .AllowAnyOrigin()
         .AllowAnyMethod());
 });
+
+builder.Services.AddAutoMapper(typeof(MapperConfig));
 
 builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console().ReadFrom.Configuration(ctx.Configuration));
 
