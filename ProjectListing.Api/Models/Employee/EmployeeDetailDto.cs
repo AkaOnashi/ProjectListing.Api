@@ -1,4 +1,6 @@
-﻿namespace ProjectListing.Api.Models.Employee
+﻿using ProjectListing.Api.Data;
+
+namespace ProjectListing.Api.Models.Employee
 {
     public class EmployeeDetailDto 
     {
@@ -8,5 +10,7 @@
         public string Position { get; set; }
         public string Subdivision { get; set; }
         public string Status { get; set; }
+
+        public List<string> EmployeeProjects { get; set; }
     }
 }

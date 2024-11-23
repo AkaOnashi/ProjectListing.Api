@@ -3,6 +3,8 @@ using ProjectListing.Api.Controllers;
 using ProjectListing.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using ProjectListing.Api.Configurations;
+using ProjectListing.Api.Contracts;
+using ProjectListing.Api.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,10 @@ builder.Services.AddCors(options => {
 });
 
 builder.Services.AddAutoMapper(typeof(MapperConfig));
+
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 
 builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console().ReadFrom.Configuration(ctx.Configuration));
 

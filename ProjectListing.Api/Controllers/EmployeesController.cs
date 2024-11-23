@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
+using ProjectListing.Api.Contracts;
 using ProjectListing.Api.Data;
 using ProjectListing.Api.Models.Employee;
 
@@ -12,11 +13,11 @@ namespace ProjectListing.Api.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly ProjectListingDbContext _context;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public EmployeesController(ProjectListingDbContext context, IMapper mapper) 
+        public EmployeesController(IEmployeeRepository employeeRepository, IMapper mapper) 
         {
-            _context = context;
+            _employeeRepository = employeeRepository;
             _mapper = mapper;
         }
 
@@ -24,7 +25,7 @@ namespace ProjectListing.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetEmployees()
         {
-            var employees = await _context.Employees.ToListAsync();
+            var employees = await _employeeRepository.GetAllAsync();
 
             var records = _mapper.Map<List<EmployeeDto>>(employees);
             return Ok(records);
@@ -34,7 +35,7 @@ namespace ProjectListing.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<EmployeeDetailDto>> GetEmployee(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
+            var employee = await _employeeRepository.GetEmployeeDetails(id);
 
             if (employee == null)
             {
@@ -42,7 +43,7 @@ namespace ProjectListing.Api.Controllers
             }
 
             var record = _mapper.Map<EmployeeDetailDto>(employee);
-            return Ok(employee);
+            return Ok(record);
         }
 
         // POST api/<EmployeesController>
@@ -51,8 +52,7 @@ namespace ProjectListing.Api.Controllers
         {
             var employee = _mapper.Map<Employee>(createEmployeeDto);
 
-            _context.Employees.Add(employee);
-            await _context.SaveChangesAsync();
+            await _employeeRepository.AddAsync(employee);
 
             return CreatedAtAction(nameof(GetEmployee), new { id = employee.Id }, employee);
         }
@@ -66,7 +66,7 @@ namespace ProjectListing.Api.Controllers
                 return BadRequest();
             }
 
-            var employee = await _context.Employees.FindAsync(id);
+            var employee = await _employeeRepository.GetAsync(id);
 
             if(employee == null)
             {
@@ -79,12 +79,11 @@ namespace ProjectListing.Api.Controllers
 
             try
             {
-                _context.Employees.Update(employee);
-                await _context.SaveChangesAsync();
+                await _employeeRepository.UpdateAsync(employee);
             }
             catch(DbUpdateConcurrencyException)
             {
-                if (!EmployeeExist(id))
+                if (!await EmployeeExist(id))
                 {
                     return NotFound(id);
                 }
@@ -101,21 +100,13 @@ namespace ProjectListing.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Employee>> DeleteEmployee(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
-
-            if(employee == null)
-            {
-                return NotFound();
-            }
-
-            _context.Employees.Remove(employee);
-            await _context.SaveChangesAsync();
+            await _employeeRepository.DeleteAsync(id);
 
             return NoContent();
         }
-        private bool EmployeeExist(int id)
+        private Task<bool> EmployeeExist(int id)
         {
-            return _context.Employees.Any(e => e.Id == id);
+            return _employeeRepository.Exists(id);
         }
     }
 }
