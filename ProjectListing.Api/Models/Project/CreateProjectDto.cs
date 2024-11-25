@@ -1,4 +1,6 @@
-﻿namespace ProjectListing.Api.Models.Project
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ProjectListing.Api.Models.Project
 {
     public class CreateProjectDto
     {

@@ -1,10 +1,14 @@
 using Serilog;
+using FluentValidation;
 using ProjectListing.Api.Controllers;
 using ProjectListing.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using ProjectListing.Api.Configurations;
 using ProjectListing.Api.Contracts;
 using ProjectListing.Api.Repository;
+using ProjectListing.Api.Validators;
+using ProjectListing.Api.Models.Project;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +18,10 @@ var connectionString = builder.Configuration.GetConnectionString("ProjectListing
 builder.Services.AddDbContext<ProjectListingDbContext>(options => { 
     options.UseSqlServer(connectionString);
 });
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateProjectDtoValidator>();
 
 builder.Services.AddControllers();
 

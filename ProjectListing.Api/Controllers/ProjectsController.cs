@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectListing.Api.Contracts;
 using ProjectListing.Api.Data;
 using ProjectListing.Api.Models.Project;
+using System.Diagnostics;
 
 namespace ProjectListing.Api.Controllers
 {
@@ -47,6 +48,13 @@ namespace ProjectListing.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Project>> PostProject([FromBody] CreateProjectDto createProjectDto)
         {
+            await Console.Out.WriteLineAsync(ModelState.ToString());
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState); // Повертає деталі помилок
+            }
+
             var project = _mapper.Map<Project>(createProjectDto);
 
             await _projectRepository.AddAsync(project);
