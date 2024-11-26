@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using ProjectListing.Api.Configurations;
 using ProjectListing.Api.Contracts;
 using ProjectListing.Api.Repository;
-using ProjectListing.Api.Validators;
 using ProjectListing.Api.Models.Project;
 using FluentValidation.AspNetCore;
+using ProjectListing.Api.Validators.Project;
 
 var builder = WebApplication.CreateBuilder(args);
 

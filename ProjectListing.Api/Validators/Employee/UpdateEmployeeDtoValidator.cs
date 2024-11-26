@@ -1,15 +1,15 @@
 ﻿using FluentValidation;
 using ProjectListing.Api.Models.Employee;
 
-namespace ProjectListing.Api.Validators
+namespace ProjectListing.Api.Validators.Employee
 {
-    public class CreateEmployeeDtoValidator : AbstractValidator<CreateEmployeeDto>
+    public class UpdateEmployeeDtoValidator : AbstractValidator<UpdateEmployeeDto>
     {
-        public CreateEmployeeDtoValidator() 
+        public UpdateEmployeeDtoValidator() 
         {
             RuleFor(e => e.Name)
-                .NotEmpty()
-                .WithMessage("Employee's name is required!");
+               .NotEmpty()
+               .WithMessage("Employee's name is required!");
 
             RuleFor(e => e.Last_Name)
                 .NotEmpty()

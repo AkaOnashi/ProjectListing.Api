@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using ProjectListing.Api.Models.Project;
 
-namespace ProjectListing.Api.Validators
+namespace ProjectListing.Api.Validators.Project
 {
     public class CreateProjectDtoValidator : AbstractValidator<CreateProjectDto>
     {
-        public CreateProjectDtoValidator() 
+        public CreateProjectDtoValidator()
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
